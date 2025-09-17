@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}Sermons - Fijai Church Of Christ{% endblock %}
+
+{% block content %}
+    <!-- Page Header -->
+    <section class="bg-blue-600 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Sermons</h1>
+            <p class="text-xl">Listen to inspiring messages and grow in your faith</p>
+        </div>
+    </section>
+
+    <!-- Sermons Archive -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {% if sermons %}
+            <div class="grid lg:grid-cols-2 gap-8">
+                {% for sermon in sermons %}
+                <div class="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden card-hover">
+                    {% if sermon.video_url %}
+                    <div class="aspect-video bg-gray-200 flex items-center justify-center">
+                        <i class="fas fa-play-circle text-6xl text-blue-600"></i>
+                    </div>
+                    {% elif sermon.audio_file %}
+                    <div class="aspect-video bg-gradient-to-br from-purple-100 to-blue-100 flex items-center justify-center">
+                        <i class="fas fa-volume-up text-6xl text-purple-600"></i>
+                    </div>
+                    {% else %}
+                    <div class="aspect-video bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+                        <i class="fas fa-book-open text-6xl text-blue-600"></i>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm text-gray-500">{{ sermon.date_preached|date:"F d, Y" }}</span>
+                            {% if sermon.series %}
+                            <span class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                {{ sermon.series }}
+                            </span>
+                            {% endif %}
+                        </div>
+                        
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">{{ sermon.title }}</h3>
+                        <p class="text-blue-600 font-medium mb-3">{{ sermon.speaker }}</p>
+                        
+                        {% if sermon.scripture_reference %}
+                        <p class="text-gray-600 font-medium mb-3">
+                            <i class="fas fa-book mr-1"></i>{{ sermon.scripture_reference }}
+                        </p>
+                        {% endif %}
+                        
+                        {% if sermon.summary %}
+                        <p class="text-gray-600 mb-4">{{ sermon.summary|truncatewords:20 }}</p>
+                        {% endif %}
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="flex space-x-3">
+                                {% if sermon.video_url %}
+                                <a href="{{ sermon.video_url }}" target="_blank" 
+                                   class="flex items-center text-red-600 hover:text-red-800">
+                                    <i class="fab fa-youtube mr-1"></i>Watch
+                                </a>
+                                {% endif %}
+                                {% if sermon.audio_file %}
+                                <a href="{{ sermon.audio_file.url }}" target="_blank" 
+                                   class="flex items-center text-purple-600 hover:text-purple-800">
+                                    <i class="fas fa-headphones mr-1"></i>Listen
+                                </a>
+                                {% endif %}
+                            </div>
+                            <a href="{% url 'sermon_detail' sermon.id %}" 
+                               class="text-blue-600 hover:text-blue-800 font-medium">
+                                Read More <i class="fas fa-arrow-right ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-16">
+                <div class="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-microphone text-4xl text-blue-600"></i>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-600 mb-4">Sermons Coming Soon</h3>
+                <p class="text-gray-500 text-lg max-w-md mx-auto mb-8">
+                    We're working on building our sermon archive. Check back soon for inspiring messages and teachings!
+                </p>
+                <a href="{% url 'events' %}" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">
+                    <i class="fas fa-calendar-alt mr-2"></i>View Upcoming Services
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Featured Series -->
+    {% if series_list %}
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Sermon Series</h2>
+                <p class="text-lg text-gray-600">Explore our themed sermon series</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for series in series_list %}
+                <div class="bg-white rounded-lg shadow-md p-6 text-center card-hover">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-list text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ series }}</h3>
+                    <p class="text-gray-600 text-sm">Collection of sermons in this series</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Call to Action -->
+    <section class="py-16 bg-blue-600 text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Experience Worship</h2>
+            <p class="text-xl mb-8">Join us for live worship services and experience the power of community prayer and praise</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'events' %}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">
+                    <i class="fas fa-calendar-alt mr-2"></i>Service Times
+                </a>
+                <a href="{% url 'contact' %}" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-300">
+                    <i class="fas fa-map-marker-alt mr-2"></i>Visit Us
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

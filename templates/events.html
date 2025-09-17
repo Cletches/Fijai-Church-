@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+
+{% block title %}Events - Fijai Church Of Christ{% endblock %}
+
+{% block content %}
+    <!-- Page Header -->
+    <section class="bg-blue-600 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Events & Calendar</h1>
+            <p class="text-xl">Join us for worship, fellowship, and community events</p>
+        </div>
+    </section>
+
+    <!-- Upcoming Events -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Upcoming Events</h2>
+                <p class="text-lg text-gray-600">Don't miss these exciting upcoming events</p>
+            </div>
+            
+            <div class="grid lg:grid-cols-2 gap-8">
+                <!-- Local Database Events -->
+                {% for event in upcoming_events %}
+                <div class="bg-white border border-gray-200 rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full
+                                {% if event.event_type == 'service' %}bg-blue-100 text-blue-800
+                                {% elif event.event_type == 'bible_study' %}bg-green-100 text-green-800
+                                {% elif event.event_type == 'community' %}bg-purple-100 text-purple-800
+                                {% elif event.event_type == 'special' %}bg-red-100 text-red-800
+                                {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                {{ event.get_event_type_display }}
+                            </span>
+                            {% if event.featured %}
+                            <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800 ml-2">
+                                Featured
+                            </span>
+                            {% endif %}
+                            {% if event.is_from_google_calendar %}
+                            <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800 ml-2">
+                                <i class="fab fa-google mr-1"></i>Google Calendar
+                            </span>
+                            {% endif %}
+                        </div>
+                        <div class="text-right">
+                            <div class="text-2xl font-bold text-blue-600">{{ event.date|date:"d" }}</div>
+                            <div class="text-sm text-gray-600">{{ event.date|date:"M Y" }}</div>
+                        </div>
+                    </div>
+                    
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ event.title }}</h3>
+                    <p class="text-gray-600 mb-4">{{ event.description|truncatewords:20 }}</p>
+                    
+                    <div class="space-y-2 text-sm text-gray-600">
+                        <div class="flex items-center">
+                            <i class="fas fa-clock mr-2 text-blue-600"></i>
+                            {{ event.start_time|time:"g:i A" }}
+                            {% if event.end_time %} - {{ event.end_time|time:"g:i A" }}{% endif %}
+                        </div>
+                        {% if event.location %}
+                        <div class="flex items-center">
+                            <i class="fas fa-map-marker-alt mr-2 text-blue-600"></i>
+                            {{ event.location }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mt-4 flex items-center justify-between">
+                        <a href="{% url 'event_detail' event.id %}" class="text-blue-600 hover:text-blue-800 font-medium">
+                            Learn More <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                        {% if event.google_calendar_link %}
+                        <a href="{{ event.google_calendar_link }}" target="_blank" 
+                           class="text-sm text-blue-600 hover:text-blue-800">
+                            <i class="fas fa-external-link-alt mr-1"></i>View in Calendar
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                
+                <!-- Google Calendar Events -->
+                {% if google_events %}
+                    {% for event in google_events %}
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg shadow-md p-6 card-hover">
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="flex-1">
+                                <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                                    <i class="fab fa-google mr-1"></i>Google Calendar
+                                </span>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-2xl font-bold text-blue-600">{{ event.date|date:"d" }}</div>
+                                <div class="text-sm text-gray-600">{{ event.date|date:"M Y" }}</div>
+                            </div>
+                        </div>
+                        
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ event.title }}</h3>
+                        {% if event.description %}
+                        <p class="text-gray-600 mb-4">{{ event.description|truncatewords:20 }}</p>
+                        {% endif %}
+                        
+                        <div class="space-y-2 text-sm text-gray-600">
+                            {% if event.start_time %}
+                            <div class="flex items-center">
+                                <i class="fas fa-clock mr-2 text-blue-600"></i>
+                                {{ event.start_time|time:"g:i A" }}
+                                {% if event.end_time %} - {{ event.end_time|time:"g:i A" }}{% endif %}
+                            </div>
+                            {% else %}
+                            <div class="flex items-center">
+                                <i class="fas fa-calendar-day mr-2 text-blue-600"></i>
+                                All Day Event
+                            </div>
+                            {% endif %}
+                            {% if event.location %}
+                            <div class="flex items-center">
+                                <i class="fas fa-map-marker-alt mr-2 text-blue-600"></i>
+                                {{ event.location }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        {% if event.html_link %}
+                        <div class="mt-4">
+                            <a href="{{ event.html_link }}" target="_blank" 
+                               class="text-blue-600 hover:text-blue-800 font-medium">
+                                <i class="fas fa-external-link-alt mr-1"></i>View in Google Calendar
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+                
+                {% if not upcoming_events and not google_events %}
+                <div class="col-span-full text-center py-12">
+                    <i class="fas fa-calendar-alt text-6xl text-gray-300 mb-4"></i>
+                    <h3 class="text-xl font-semibold text-gray-600 mb-2">No Upcoming Events</h3>
+                    <p class="text-gray-500">Check back soon for new events and activities!</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Regular Service Schedule -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Regular Services</h2>
+                <p class="text-lg text-gray-600">Join us for regular worship and fellowship</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg shadow-md p-8 text-center">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-church text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Sunday Service</h3>
+                    <p class="text-blue-600 font-medium text-lg mb-2">9:00 AM - 12:00 PM</p>
+                    <p class="text-gray-600">Join us for inspiring worship, uplifting music, and biblical teaching.</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-8 text-center">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-book-open text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Bible Study</h3>
+                    <p class="text-green-600 font-medium text-lg mb-2">Tuesday 7:00 PM</p>
+                    <p class="text-gray-600">Dive deeper into God's Word with our weekly Bible study sessions.</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-8 text-center">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-music text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Prayers/Song Training</h3>
+                    <p class="text-purple-600 font-medium text-lg mb-2">Thursday 7:00 PM</p>
+                    <p class="text-gray-600">Prayer time and music training for our worship team and congregation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% if past_events %}
+    <!-- Past Events -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Past Events</h2>
+                <p class="text-lg text-gray-600">See what we've been up to in our community</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for event in past_events %}
+                <div class="bg-gray-50 rounded-lg p-6">
+                    <div class="text-sm text-gray-500 mb-2">{{ event.date|date:"M d, Y" }}</div>
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ event.title }}</h3>
+                    <p class="text-gray-600 text-sm">{{ event.description|truncatewords:15 }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Call to Action -->
+    <section class="py-16 bg-blue-600 text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Join Our Church Family</h2>
+            <p class="text-xl mb-8">Experience the love of Christ and the warmth of our community</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'contact' %}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">
+                    Plan Your Visit
+                </a>
+                <a href="{% url 'about' %}" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-300">
+                    Learn More About Us
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

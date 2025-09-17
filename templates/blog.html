@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block title %}News & Updates - Fijai Church Of Christ{% endblock %}
+
+{% block content %}
+    <!-- Page Header -->
+    <section class="bg-blue-600 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">News & Updates</h1>
+            <p class="text-xl">Stay connected with the latest church news and announcements</p>
+        </div>
+    </section>
+
+    <!-- Blog Posts -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {% if blog_posts %}
+            <div class="grid lg:grid-cols-2 gap-8">
+                {% for post in blog_posts %}
+                <article class="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden card-hover">
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm text-gray-500">{{ post.created_at|date:"F d, Y" }}</span>
+                            {% if post.featured %}
+                            <span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                                Featured
+                            </span>
+                            {% endif %}
+                        </div>
+                        
+                        <h2 class="text-2xl font-bold text-gray-900 mb-3">
+                            <a href="{% url 'blog_detail' post.id %}" class="hover:text-blue-600 transition duration-300">
+                                {{ post.title }}
+                            </a>
+                        </h2>
+                        
+                        <p class="text-gray-600 mb-4 leading-relaxed">{{ post.content|truncatewords:30 }}</p>
+                        
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
+                                    <i class="fas fa-user text-blue-600 text-sm"></i>
+                                </div>
+                                <span class="text-gray-700 font-medium">{{ post.author }}</span>
+                            </div>
+                            <a href="{% url 'blog_detail' post.id %}" 
+                               class="text-blue-600 hover:text-blue-800 font-medium">
+                                Read More <i class="fas fa-arrow-right ml-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-16">
+                <div class="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-newspaper text-4xl text-blue-600"></i>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-600 mb-4">News Coming Soon</h3>
+                <p class="text-gray-500 text-lg max-w-md mx-auto mb-8">
+                    We're working on bringing you the latest church news and updates. Check back soon!
+                </p>
+                <a href="{% url 'events' %}" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">
+                    <i class="fas fa-calendar-alt mr-2"></i>View Upcoming Events
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Newsletter Signup -->
+    <section class="py-16 bg-blue-600 text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Stay Updated</h2>
+            <p class="text-xl mb-8">Subscribe to our newsletter to receive the latest news and announcements</p>
+            
+            <form id="newsletter-form" class="max-w-md mx-auto">
+                {% csrf_token %}
+                <div class="flex">
+                    <input type="email" id="newsletter-email" placeholder="Enter your email" 
+                           class="flex-1 px-4 py-3 rounded-l-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-300" required>
+                    <button type="submit" class="bg-blue-800 px-6 py-3 rounded-r-lg font-semibold hover:bg-blue-900 transition duration-300">
+                        Subscribe
+                    </button>
+                </div>
+                <div id="newsletter-message" class="mt-4 text-sm"></div>
+            </form>
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Newsletter signup
+    document.getElementById('newsletter-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const email = document.getElementById('newsletter-email').value;
+        const messageDiv = document.getElementById('newsletter-message');
+        
+        fetch('{% url "newsletter_signup" %}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: 'email=' + encodeURIComponent(email)
+        })
+        .then(response => response.json())
+        .then(data => {
+            messageDiv.textContent = data.message;
+            messageDiv.className = data.success ? 'mt-4 text-sm text-green-200' : 'mt-4 text-sm text-red-200';
+            if (data.success) {
+                document.getElementById('newsletter-email').value = '';
+            }
+        })
+        .catch(error => {
+            messageDiv.textContent = 'An error occurred. Please try again.';
+            messageDiv.className = 'mt-4 text-sm text-red-200';
+        });
+    });
+</script>
+{% endblock %}

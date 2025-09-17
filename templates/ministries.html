@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}Ministries - Fijai Church Of Christ{% endblock %}
+
+{% block content %}
+    <!-- Page Header -->
+    <section class="bg-blue-600 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Ministries</h1>
+            <p class="text-xl">Find your place to serve and grow in community</p>
+        </div>
+    </section>
+
+    <!-- Ministries Grid -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {% if ministries %}
+            <div class="grid lg:grid-cols-2 gap-8">
+                {% for ministry in ministries %}
+                <div class="bg-white border border-gray-200 rounded-lg shadow-md p-8 card-hover">
+                    <div class="flex items-start justify-between mb-4">
+                        {% if ministry.age_group %}
+                        <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+                            {{ ministry.age_group }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold text-gray-900 mb-4">{{ ministry.name }}</h3>
+                    <p class="text-gray-600 mb-6 leading-relaxed">{{ ministry.description }}</p>
+                    
+                    <div class="space-y-3 text-sm">
+                        {% if ministry.leader %}
+                        <div class="flex items-center">
+                            <i class="fas fa-user text-blue-600 mr-3"></i>
+                            <span class="text-gray-700"><strong>Leader:</strong> {{ ministry.leader }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if ministry.meeting_time %}
+                        <div class="flex items-center">
+                            <i class="fas fa-clock text-blue-600 mr-3"></i>
+                            <span class="text-gray-700"><strong>Meets:</strong> {{ ministry.meeting_time }}</span>
+                        </div>
+                        {% endif %}
+                        
+                        {% if ministry.contact_email %}
+                        <div class="flex items-center">
+                            <i class="fas fa-envelope text-blue-600 mr-3"></i>
+                            <a href="mailto:{{ ministry.contact_email }}" class="text-blue-600 hover:text-blue-800">
+                                {{ ministry.contact_email }}
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mt-6 pt-6 border-t border-gray-200">
+                        <a href="{% url 'contact' %}" class="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition duration-300">
+                            Get Involved
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-16">
+                <div class="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-hands-helping text-4xl text-blue-600"></i>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-600 mb-4">Ministries Information Coming Soon</h3>
+                <p class="text-gray-500 text-lg max-w-md mx-auto mb-8">
+                    We're working on organizing our ministry information. In the meantime, we have several ways for you to get involved!
+                </p>
+                <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+                    <div class="bg-blue-50 rounded-lg p-6 text-center">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-users text-blue-600 text-2xl"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold text-gray-900 mb-2">Youth Ministry</h4>
+                        <p class="text-gray-600 text-sm">Activities and fellowship for young people</p>
+                    </div>
+                    
+                    <div class="bg-purple-50 rounded-lg p-6 text-center">
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-female text-purple-600 text-2xl"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold text-gray-900 mb-2">Women's Fellowship</h4>
+                        <p class="text-gray-600 text-sm">Support and encouragement for women</p>
+                    </div>
+                    
+                    <div class="bg-green-50 rounded-lg p-6 text-center">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-heart text-green-600 text-2xl"></i>
+                        </div>
+                        <h4 class="text-lg font-semibold text-gray-900 mb-2">Community Outreach</h4>
+                        <p class="text-gray-600 text-sm">Serving our local community</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Get Involved Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Ready to Get Involved?</h2>
+            <p class="text-lg text-gray-600 mb-8">
+                Whether you're looking to serve, learn, or connect with others, there's a place for you in our church family. 
+                Contact us to learn more about our ministries and how you can participate.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'contact' %}" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">
+                    <i class="fas fa-envelope mr-2"></i>Contact Us
+                </a>
+                <a href="{% url 'events' %}" class="bg-gray-800 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-900 transition duration-300">
+                    <i class="fas fa-calendar-alt mr-2"></i>View Events
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-16 bg-blue-600 text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Serve with Purpose</h2>
+            <p class="text-xl mb-8">Use your gifts and talents to make a difference in our church and community</p>
+            <a href="{% url 'contact' %}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">
+                <i class="fas fa-hands text-mr-2"></i>Start Serving Today
+            </a>
+        </div>
+    </section>
+{% endblock %}

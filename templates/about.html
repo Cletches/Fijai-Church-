@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us - Fijai Church Of Christ{% endblock %}
+
+{% block content %}
+    <!-- Page Header -->
+    <section class="bg-blue-600 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">About Us</h1>
+            <p class="text-xl">Learn about our faith, history, and mission</p>
+        </div>
+    </section>
+
+    <!-- Church Information -->
+    {% if church_info %}
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-3 gap-12">
+                <div class="bg-blue-50 rounded-lg p-8">
+                    <h2 class="text-2xl font-bold text-blue-800 mb-4">Our Mission</h2>
+                    <p class="text-gray-700 leading-relaxed">{{ church_info.mission_statement }}</p>
+                </div>
+                
+                <div class="bg-green-50 rounded-lg p-8">
+                    <h2 class="text-2xl font-bold text-green-800 mb-4">Our Faith</h2>
+                    <p class="text-gray-700 leading-relaxed">{{ church_info.statement_of_faith }}</p>
+                </div>
+                
+                <div class="bg-purple-50 rounded-lg p-8">
+                    <h2 class="text-2xl font-bold text-purple-800 mb-4">Our History</h2>
+                    <p class="text-gray-700 leading-relaxed">{{ church_info.history }}</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% else %}
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-3 gap-12">
+                <div class="bg-blue-50 rounded-lg p-8">
+                    <h2 class="text-2xl font-bold text-blue-800 mb-4">Our Mission</h2>
+                    <p class="text-gray-700 leading-relaxed">To share the love of Christ and serve our community through worship, fellowship, and outreach, building faith, hope, and love in every heart we touch.</p>
+                </div>
+                
+                <div class="bg-green-50 rounded-lg p-8">
+                    <h2 class="text-2xl font-bold text-green-800 mb-4">Our Faith</h2>
+                    <p class="text-gray-700 leading-relaxed">We believe in one God, revealed in Father, Son, and Holy Spirit, and in salvation through Jesus Christ. We are committed to following Christ's teachings and spreading His love.</p>
+                </div>
+                
+                <div class="bg-purple-50 rounded-lg p-8">
+                    <h2 class="text-2xl font-bold text-purple-800 mb-4">Our History</h2>
+                    <p class="text-gray-700 leading-relaxed">Founded in Takoradi, Ghana, our church has served the community for decades with a strong commitment to spiritual growth, community service, and Christian fellowship.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Service Times Section -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Join Us for Worship</h2>
+                <p class="text-lg text-gray-600">Come and be part of our church family</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg shadow-md p-8 text-center card-hover">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-church text-blue-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Sunday Service</h3>
+                    <p class="text-blue-600 font-medium text-lg mb-2">9:00 AM - 12:00 PM</p>
+                    <p class="text-gray-600">Join us for inspiring worship, uplifting music, and biblical teaching.</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-8 text-center card-hover">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-book-open text-green-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Bible Study</h3>
+                    <p class="text-green-600 font-medium text-lg mb-2">Tuesday 7:00 PM</p>
+                    <p class="text-gray-600">Dive deeper into God's Word with fellow believers.</p>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-8 text-center card-hover">
+                    <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-music text-purple-600 text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Prayers/Song Training</h3>
+                    <p class="text-purple-600 font-medium text-lg mb-2">Thursday 7:00 PM</p>
+                    <p class="text-gray-600">Come together for prayer and worship song practice.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visit Us Section -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Visit Us</h2>
+                <p class="text-lg text-gray-600">We'd love to welcome you to our church family</p>
+            </div>
+            
+            <div class="bg-blue-50 rounded-lg p-8 text-center">
+                {% if church_info %}
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Location</h3>
+                    <p class="text-gray-700">{{ church_info.address|linebreaks }}</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Phone</h4>
+                        <p class="text-gray-700">{{ church_info.phone }}</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Email</h4>
+                        <p class="text-gray-700">{{ church_info.email }}</p>
+                    </div>
+                </div>
+                {% else %}
+                <div class="mb-6">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Location</h3>
+                    <p class="text-gray-700">I19 Nana Owuo St<br>Takoradi, Ghana</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Phone</h4>
+                        <p class="text-gray-700">+233 24 323 2616</p>
+                        <p class="text-gray-700">+233 20 192 6565</p>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Email</h4>
+                        <p class="text-gray-700">fijaichurch@yahoo.com</p>
+                    </div>
+                </div>
+                {% endif %}
+                <div class="mt-6">
+                    <a href="{% url 'contact' %}" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">
+                        Get Directions
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

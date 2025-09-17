@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Our Staff - Fijai Church Of Christ{% endblock %}
+
+{% block content %}
+    <!-- Page Header -->
+    <section class="bg-blue-600 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Our Staff</h1>
+            <p class="text-xl">Meet the dedicated people who serve our church community</p>
+        </div>
+    </section>
+
+    <!-- Staff Directory -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {% for staff_member in staff_members %}
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden card-hover">
+                    {% if staff_member.photo %}
+                    <img src="{{ staff_member.photo.url }}" alt="{{ staff_member.name }}" class="w-full h-80 object-cover">
+                    {% else %}
+                    <div class="w-full h-80 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+                        <i class="fas fa-user text-8xl text-blue-400"></i>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="p-6">
+                        <h3 class="text-2xl font-bold text-gray-900 mb-2">{{ staff_member.name }}</h3>
+                        <p class="text-blue-600 font-semibold text-lg mb-4">{{ staff_member.role }}</p>
+                        
+                        {% if staff_member.bio %}
+                        <p class="text-gray-600 mb-6 leading-relaxed">{{ staff_member.bio }}</p>
+                        {% endif %}
+                        
+                        <div class="flex space-x-4 border-t pt-4">
+                            {% if staff_member.email %}
+                            <a href="mailto:{{ staff_member.email }}" 
+                               class="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-full text-blue-600 hover:bg-blue-200 transition duration-300"
+                               title="Email {{ staff_member.name }}">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                            {% endif %}
+                            {% if staff_member.phone %}
+                            <a href="tel:{{ staff_member.phone }}" 
+                               class="flex items-center justify-center w-10 h-10 bg-green-100 rounded-full text-green-600 hover:bg-green-200 transition duration-300"
+                               title="Call {{ staff_member.name }}">
+                                <i class="fas fa-phone"></i>
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-span-full text-center py-16">
+                    <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-users text-4xl text-gray-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-semibold text-gray-600 mb-4">Staff Information Coming Soon</h3>
+                    <p class="text-gray-500 text-lg max-w-md mx-auto">
+                        We're working on updating our staff directory. Please check back soon or 
+                        <a href="{% url 'contact' %}" class="text-blue-600 hover:text-blue-800 underline">contact us</a> 
+                        for more information.
+                    </p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Leadership Message -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">A Message from Our Leadership</h2>
+            <div class="bg-white rounded-lg shadow-md p-8">
+                <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                    "We are committed to serving God and our community with hearts full of love and dedication. 
+                    Our leadership team works together to create an environment where everyone can grow in faith, 
+                    find community, and experience the transforming love of Jesus Christ."
+                </p>
+                <p class="text-gray-600 font-medium">- The Leadership Team of Fijai Church Of Christ</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Leadership -->
+    <section class="py-16 bg-blue-600 text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl font-bold mb-6">Connect with Our Team</h2>
+            <p class="text-xl mb-8">
+                Have questions about our church, need pastoral care, or want to get involved? 
+                Our staff is here to help and support you.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'contact' %}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">
+                    <i class="fas fa-envelope mr-2"></i>Contact Us
+                </a>
+                <a href="{% url 'about' %}" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-300">
+                    <i class="fas fa-info-circle mr-2"></i>Learn More
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

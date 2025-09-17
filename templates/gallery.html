@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Gallery - Fijai Church Of Christ{% endblock %}
+
+{% block content %}
+    <!-- Page Header -->
+    <section class="bg-blue-600 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Photo Gallery</h1>
+            <p class="text-xl">Capturing moments of faith, fellowship, and community</p>
+        </div>
+    </section>
+
+    <!-- Gallery Grid -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {% if gallery_images %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {% for image in gallery_images %}
+                <div class="group relative overflow-hidden rounded-lg shadow-md card-hover cursor-pointer">
+                    {% if image.image %}
+                    <img src="{{ image.image.url }}" alt="{{ image.title }}" 
+                         class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300">
+                    {% else %}
+                    <div class="w-full h-64 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+                        <i class="fas fa-image text-4xl text-blue-400"></i>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Overlay -->
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-opacity duration-300 flex items-center justify-center">
+                        <div class="text-white text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4">
+                            <h3 class="text-lg font-semibold mb-2">{{ image.title }}</h3>
+                            {% if image.description %}
+                            <p class="text-sm">{{ image.description|truncatewords:10 }}</p>
+                            {% endif %}
+                            {% if image.date_taken %}
+                            <p class="text-xs mt-2 opacity-75">{{ image.date_taken|date:"M d, Y" }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-16">
+                <div class="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-camera text-4xl text-blue-600"></i>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-600 mb-4">Gallery Coming Soon</h3>
+                <p class="text-gray-500 text-lg max-w-md mx-auto mb-8">
+                    We're working on building our photo gallery to showcase our church community and events. Check back soon!
+                </p>
+                <a href="{% url 'events' %}" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">
+                    <i class="fas fa-calendar-alt mr-2"></i>View Upcoming Events
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-6">Be Part of Our Story</h2>
+            <p class="text-lg text-gray-600 mb-8">
+                Join us for worship, fellowship, and community events. Create memories and grow in faith together.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'events' %}" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">
+                    <i class="fas fa-calendar-alt mr-2"></i>Upcoming Events
+                </a>
+                <a href="{% url 'contact' %}" class="bg-gray-800 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-900 transition duration-300">
+                    <i class="fas fa-envelope mr-2"></i>Contact Us
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

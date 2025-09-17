@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block title %}Resources - Fijai Church Of Christ{% endblock %}
+
+{% block content %}
+    <!-- Page Header -->
+    <section class="bg-blue-600 text-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">Resources</h1>
+            <p class="text-xl">Helpful resources for spiritual growth and learning</p>
+        </div>
+    </section>
+
+    <!-- Resources Grid -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            {% if resources %}
+            <div class="grid lg:grid-cols-2 gap-8">
+                {% for resource in resources %}
+                <div class="bg-white border border-gray-200 rounded-lg shadow-md p-6 card-hover">
+                    <div class="flex items-start justify-between mb-4">
+                        <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full
+                            {% if resource.resource_type == 'book' %}bg-blue-100 text-blue-800
+                            {% elif resource.resource_type == 'study_guide' %}bg-green-100 text-green-800
+                            {% elif resource.resource_type == 'video' %}bg-red-100 text-red-800
+                            {% elif resource.resource_type == 'article' %}bg-purple-100 text-purple-800
+                            {% else %}bg-gray-100 text-gray-800{% endif %}">
+                            {{ resource.get_resource_type_display }}
+                        </span>
+                        {% if resource.category %}
+                        <span class="text-sm text-gray-500">{{ resource.category }}</span>
+                        {% endif %}
+                    </div>
+                    
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ resource.title }}</h3>
+                    {% if resource.author %}
+                    <p class="text-blue-600 font-medium mb-3">by {{ resource.author }}</p>
+                    {% endif %}
+                    
+                    <p class="text-gray-600 mb-4">{{ resource.description }}</p>
+                    
+                    <div class="flex space-x-3">
+                        {% if resource.file %}
+                        <a href="{{ resource.file.url }}" target="_blank" 
+                           class="text-green-600 hover:text-green-800 font-medium">
+                            <i class="fas fa-download mr-1"></i>Download
+                        </a>
+                        {% endif %}
+                        {% if resource.external_url %}
+                        <a href="{{ resource.external_url }}" target="_blank" 
+                           class="text-blue-600 hover:text-blue-800 font-medium">
+                            <i class="fas fa-external-link-alt mr-1"></i>View Online
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="text-center py-16">
+                <div class="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-book text-4xl text-blue-600"></i>
+                </div>
+                <h3 class="text-2xl font-semibold text-gray-600 mb-4">Resources Coming Soon</h3>
+                <p class="text-gray-500 text-lg max-w-md mx-auto mb-8">
+                    We're working on building our resource library with books, study guides, and helpful materials for your spiritual journey.
+                </p>
+                <a href="{% url 'sermons' %}" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">
+                    <i class="fas fa-play mr-2"></i>Listen to Sermons
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-16 bg-blue-600 text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Grow in Faith</h2>
+            <p class="text-xl mb-8">Explore our sermons, join a Bible study, or connect with our community to deepen your spiritual journey</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'sermons' %}" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">
+                    <i class="fas fa-play mr-2"></i>Watch Sermons
+                </a>
+                <a href="{% url 'contact' %}" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition duration-300">
+                    <i class="fas fa-users mr-2"></i>Join Bible Study
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

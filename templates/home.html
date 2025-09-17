@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if church_info %}{{ church_info.name }}{% else %}Fijai Church of Christ{% endif %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .hero-bg {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            transition: transform 0.3s ease;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <h1 class="text-xl font-bold text-blue-800">
+                            {% if church_info %}{{ church_info.name }}{% else %}Fijai Church Of Christ{% endif %}
+                        </h1>
+                    </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="{% url 'home' %}" class="text-blue-800 hover:text-blue-600 font-medium">Home</a>
+                    <a href="{% url 'about' %}" class="text-gray-700 hover:text-blue-600">About</a>
+                    <a href="{% url 'events' %}" class="text-gray-700 hover:text-blue-600">Events</a>
+                    <a href="{% url 'teachings' %}" class="text-gray-700 hover:text-blue-600">Teachings</a>
+                    <a href="{% url 'gallery' %}" class="text-gray-700 hover:text-blue-600">Gallery</a>
+                    <a href="{% url 'blog' %}" class="text-gray-700 hover:text-blue-600">News</a>
+                    <a href="{% url 'contact' %}" class="text-gray-700 hover:text-blue-600">Contact</a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button class="mobile-menu-button">
+                        <i class="fas fa-bars text-gray-700"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile menu -->
+        <div class="md:hidden mobile-menu hidden">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t">
+                <a href="{% url 'home' %}" class="block px-3 py-2 text-blue-800 font-medium">Home</a>
+                <a href="{% url 'about' %}" class="block px-3 py-2 text-gray-700 hover:text-blue-600">About</a>
+                <a href="{% url 'events' %}" class="block px-3 py-2 text-gray-700 hover:text-blue-600">Events</a>
+                <a href="{% url 'teachings' %}" class="block px-3 py-2 text-gray-700 hover:text-blue-600">Teachings</a>
+                <a href="{% url 'gallery' %}" class="block px-3 py-2 text-gray-700 hover:text-blue-600">Gallery</a>
+                <a href="{% url 'blog' %}" class="block px-3 py-2 text-gray-700 hover:text-blue-600">News</a>
+                <a href="{% url 'contact' %}" class="block px-3 py-2 text-gray-700 hover:text-blue-600">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-bg text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+            <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                Welcome to {% if church_info %}{{ church_info.name }}{% else %}Fijai Church Of Christ{% endif %}
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">
+                {% if church_info and church_info.mission_statement %}
+                    {{ church_info.mission_statement|truncatewords:20 }}
+                {% else %}
+                    Building faith, love, and hope in our community through Christ's love
+                {% endif %}
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'events' %}" class="bg-white text-blue-800 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition duration-300">
+                    <i class="fas fa-calendar-alt mr-2"></i>View Events
+                </a>
+                <a href="{% url 'teachings' %}" class="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-800 transition duration-300">
+                    <i class="fas fa-book mr-2"></i>View Teachings
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Times -->
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Service Times</h2>
+                <p class="text-lg text-gray-600">Join us for worship and fellowship</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {% for service in service_times %}
+                <div class="bg-blue-50 rounded-lg p-6 text-center card-hover">
+                    <div class="text-blue-800 text-2xl font-bold mb-2">{{ service.get_day_display }}</div>
+                    <div class="text-xl font-semibold text-gray-900 mb-2">{{ service.service_name }}</div>
+                    <div class="text-blue-600 font-medium">
+                        {{ service.start_time|time:"g:i A" }}
+                        {% if service.end_time %} - {{ service.end_time|time:"g:i A" }}{% endif %}
+                    </div>
+                    {% if service.description %}
+                    <p class="text-gray-600 text-sm mt-2">{{ service.description }}</p>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <div class="col-span-full text-center">
+                    <div class="bg-blue-50 rounded-lg p-8">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">Sunday Service</h3>
+                        <p class="text-blue-600 font-medium">9:00 AM - 12:00 PM</p>
+                        <p class="text-gray-600 text-sm mt-2">Join us for worship, prayer, and fellowship</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Info Grid -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Contact Info -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-map-marker-alt text-blue-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-4">Visit Us</h3>
+                        {% if church_info %}
+                        <p class="text-gray-600 mb-4">{{ church_info.address|linebreaks }}</p>
+                        <div class="space-y-2">
+                            <p class="text-gray-600"><i class="fas fa-phone mr-2"></i>{{ church_info.phone }}</p>
+                            <p class="text-gray-600"><i class="fas fa-envelope mr-2"></i>{{ church_info.email }}</p>
+                        </div>
+                        {% else %}
+                        <p class="text-gray-600 mb-4">I19 Nana Owuo St<br>Takoradi, Ghana</p>
+                        <div class="space-y-2">
+                            <p class="text-gray-600"><i class="fas fa-phone mr-2"></i>+233 24 323 2616</p>
+                            <p class="text-gray-600"><i class="fas fa-phone mr-2"></i>+233 20 192 6565</p>
+                            <p class="text-gray-600"><i class="fas fa-envelope mr-2"></i>fijaichurch@yahoo.com</p>
+                        </div>
+                        {% endif %}
+                        <a href="{% url 'contact' %}" class="inline-block mt-4 text-blue-600 hover:text-blue-800 font-medium">
+                            Get Directions <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Upcoming Events -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-calendar-alt text-green-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">Upcoming Events</h3>
+                    </div>
+                    
+                    <!-- Local Events -->
+                    {% for event in upcoming_events %}
+                    <div class="border-l-4 border-green-500 pl-4 mb-4">
+                        <h4 class="font-semibold text-gray-900">{{ event.title }}</h4>
+                        <p class="text-sm text-gray-600">{{ event.date|date:"M d, Y" }} at {{ event.start_time|time:"g:i A" }}</p>
+                        {% if event.is_from_google_calendar %}
+                        <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800 mt-1">
+                            <i class="fab fa-google mr-1"></i>Google Calendar
+                        </span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    
+                    <!-- Google Calendar Events -->
+                    {% if google_events %}
+                        {% for event in google_events %}
+                        <div class="border-l-4 border-blue-500 pl-4 mb-4">
+                            <h4 class="font-semibold text-gray-900">{{ event.title }}</h4>
+                            <p class="text-sm text-gray-600">
+                                {{ event.date|date:"M d, Y" }}
+                                {% if event.start_time %} at {{ event.start_time|time:"g:i A" }}{% endif %}
+                            </p>
+                            {% if event.location %}
+                            <p class="text-xs text-gray-500 mt-1">
+                                <i class="fas fa-map-marker-alt mr-1"></i>{{ event.location }}
+                            </p>
+                            {% endif %}
+                            <div class="flex items-center justify-between mt-2">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-blue-100 text-blue-800">
+                                    <i class="fab fa-google mr-1"></i>Google Calendar
+                                </span>
+                                {% if event.html_link %}
+                                <a href="{{ event.html_link }}" target="_blank" 
+                                   class="text-xs text-blue-600 hover:text-blue-800">
+                                    <i class="fas fa-external-link-alt mr-1"></i>View in Calendar
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    {% if not upcoming_events and not google_events %}
+                    <p class="text-gray-600 text-center">No upcoming events scheduled.</p>
+                    {% endif %}
+                    
+                    <a href="{% url 'events' %}" class="block text-center mt-4 text-green-600 hover:text-green-800 font-medium">
+                        View All Events <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+
+                <!-- Latest Teachings -->
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-book-open text-purple-600 text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold">Latest Teachings</h3>
+                    </div>
+                    {% for teaching in latest_teachings %}
+                    <div class="mb-4">
+                        <h4 class="font-semibold text-gray-900">{{ teaching.title }}</h4>
+                        <p class="text-sm text-gray-600">{{ teaching.teacher }} • {{ teaching.date_created|date:"M d, Y" }}</p>
+                        {% if teaching.scripture_reference %}
+                        <p class="text-sm text-purple-600">{{ teaching.scripture_reference }}</p>
+                        {% endif %}
+                    </div>
+                    {% empty %}
+                    <p class="text-gray-600 text-center">No teachings available yet.</p>
+                    {% endfor %}
+                    <a href="{% url 'teachings' %}" class="block text-center mt-4 text-purple-600 hover:text-purple-800 font-medium">
+                        View More <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Photo Gallery Preview -->
+    {% if featured_gallery %}
+    <section class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Church Life</h2>
+                <p class="text-lg text-gray-600">See our community in action</p>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                {% for image in featured_gallery %}
+                <div class="aspect-square overflow-hidden rounded-lg card-hover">
+                    <img src="{{ image.image.url }}" alt="{{ image.title }}" class="w-full h-full object-cover">
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="text-center mt-8">
+                <a href="{% url 'gallery' %}" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">
+                    <i class="fas fa-images mr-2"></i>View Full Gallery
+                </a>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Newsletter Signup -->
+    <section class="py-16 bg-blue-600 text-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Stay Connected</h2>
+            <p class="text-xl mb-8">Get the latest updates, announcements, and prayer requests</p>
+            
+            <form id="newsletter-form" class="max-w-md mx-auto">
+                {% csrf_token %}
+                <div class="flex">
+                    <input type="email" id="newsletter-email" placeholder="Enter your email" 
+                           class="flex-1 px-4 py-3 rounded-l-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-300" required>
+                    <button type="submit" class="bg-blue-800 px-6 py-3 rounded-r-lg font-semibold hover:bg-blue-900 transition duration-300">
+                        Subscribe
+                    </button>
+                </div>
+                <div id="newsletter-message" class="mt-4 text-sm"></div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Latest Blog Posts -->
+    {% if latest_blog_posts %}
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Latest News</h2>
+                <p class="text-lg text-gray-600">Stay updated with church announcements and stories</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                {% for post in latest_blog_posts %}
+                <article class="bg-white rounded-lg shadow-md overflow-hidden card-hover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold mb-2">
+                            <a href="{% url 'blog_detail' post.id %}" class="text-gray-900 hover:text-blue-600">
+                                {{ post.title }}
+                            </a>
+                        </h3>
+                        <p class="text-gray-600 mb-4">{{ post.content|truncatewords:20 }}</p>
+                        <div class="flex items-center justify-between text-sm text-gray-500">
+                            <span>{{ post.author }}</span>
+                            <span>{{ post.created_at|date:"M d, Y" }}</span>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            
+            <div class="text-center mt-8">
+                <a href="{% url 'blog' %}" class="bg-gray-800 text-white px-8 py-3 rounded-lg font-semibold hover:bg-gray-900 transition duration-300">
+                    Read More News
+                </a>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4">
+                        {% if church_info %}{{ church_info.name }}{% else %}Fijai Church Of Christ{% endif %}
+                    </h3>
+                    {% if church_info and church_info.mission_statement %}
+                    <p class="text-gray-400 mb-4">{{ church_info.mission_statement|truncatewords:15 }}</p>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'about' %}" class="text-gray-400 hover:text-white">About Us</a></li>
+                       
+                      
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Connect</h4>
+                    <ul class="space-y-2">
+                        <li><a href="{% url 'events' %}" class="text-gray-400 hover:text-white">Events</a></li>
+                        <li><a href="{% url 'blog' %}" class="text-gray-400 hover:text-white">News & Updates</a></li>
+                        <li><a href="{% url 'contact' %}" class="text-gray-400 hover:text-white">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Follow Us</h4>
+                    <div class="flex space-x-4">
+                        {% if church_info %}
+                            {% if church_info.facebook_url %}
+                            <a href="{{ church_info.facebook_url }}" class="text-gray-400 hover:text-white text-xl">
+                                <i class="fab fa-facebook"></i>
+                            </a>
+                            {% endif %}
+                        {% else %}
+                        <a href="https://www.facebook.com/profile.php?id=100070091529316" class="text-gray-400 hover:text-white text-xl"><i class="fab fa-facebook"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-400">
+                    &copy; 2025 {% if church_info %}{{ church_info.name }}{% else %}Fijai Church Of Christ{% endif %}. 
+                    Loving God, Serving People.
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.querySelector('.mobile-menu-button').addEventListener('click', function() {
+            document.querySelector('.mobile-menu').classList.toggle('hidden');
+        });
+
+        // Newsletter signup
+        document.getElementById('newsletter-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('newsletter-email').value;
+            const messageDiv = document.getElementById('newsletter-message');
+            
+            fetch('{% url "newsletter_signup" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                },
+                body: 'email=' + encodeURIComponent(email)
+            })
+            .then(response => response.json())
+            .then(data => {
+                messageDiv.textContent = data.message;
+                messageDiv.className = data.success ? 'mt-4 text-sm text-green-200' : 'mt-4 text-sm text-red-200';
+                if (data.success) {
+                    document.getElementById('newsletter-email').value = '';
+                }
+            })
+            .catch(error => {
+                messageDiv.textContent = 'An error occurred. Please try again.';
+                messageDiv.className = 'mt-4 text-sm text-red-200';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ teaching.title }} - Fijai Church Of Christ{% endblock %}
+
+{% block content %}
+    <!-- Page Header -->
+    <section class="bg-blue-600 text-white py-16">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between mb-6">
+                <a href="{% url 'teachings' %}" class="text-blue-200 hover:text-white">
+                    <i class="fas fa-arrow-left mr-2"></i>Back to Teachings
+                </a>
+                <div class="flex gap-2">
+                    {% if teaching.category %}
+                    <span class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-800 text-blue-100">
+                        {{ teaching.category }}
+                    </span>
+                    {% endif %}
+                    {% if teaching.featured %}
+                    <span class="px-3 py-1 text-xs font-semibold rounded-full bg-yellow-500 text-yellow-900">
+                        Featured
+                    </span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">{{ teaching.title }}</h1>
+            
+            <div class="flex flex-col md:flex-row md:items-center gap-4 text-blue-100">
+                <div class="flex items-center">
+                    <i class="fas fa-user mr-2"></i>
+                    <span>{{ teaching.teacher }}</span>
+                </div>
+                {% if teaching.scripture_reference %}
+                <div class="flex items-center">
+                    <i class="fas fa-book mr-2"></i>
+                    <span>{{ teaching.scripture_reference }}</span>
+                </div>
+                {% endif %}
+                <div class="flex items-center">
+                    <i class="fas fa-calendar mr-2"></i>
+                    <span>{{ teaching.date_created|date:"F d, Y" }}</span>
+                </div>
+                {% if teaching.series %}
+                <div class="flex items-center">
+                    <i class="fas fa-list mr-2"></i>
+                    <span>{{ teaching.series }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Teaching Content -->
+    <section class="py-16 bg-white">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Main Content -->
+                <div class="md:col-span-2">
+                    {% if teaching.description %}
+                    <div class="prose prose-lg max-w-none">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-4">About This Teaching</h2>
+                        <div class="text-gray-700 leading-relaxed">
+                            {{ teaching.description|linebreaks }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- PDF Viewer Section -->
+                    {% if teaching.pdf_file %}
+                    <div class="mt-8">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-4">Study Material</h3>
+                        <div class="bg-gray-50 rounded-lg p-6 text-center">
+                            <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-file-pdf text-red-600 text-3xl"></i>
+                            </div>
+                            <h4 class="text-lg font-semibold text-gray-900 mb-2">{{ teaching.title }}.pdf</h4>
+                            <p class="text-gray-600 mb-4">Download this PDF to study offline or print for group study</p>
+                            
+                            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                                <a href="{% url 'download_pdf' teaching.id %}" 
+                                   class="bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition duration-300 shadow-lg">
+                                    <i class="fas fa-download mr-2"></i>Download PDF
+                                </a>
+                                <a href="{{ teaching.pdf_file.url }}" target="_blank" 
+                                   class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300 shadow-lg">
+                                    <i class="fas fa-external-link-alt mr-2"></i>View Online
+                                </a>
+                                <button onclick="printPDF('{{ teaching.pdf_file.url }}')" 
+                                        class="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition duration-300 shadow-lg">
+                                    <i class="fas fa-print mr-2"></i>Print PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Study Tips -->
+                    <div class="mt-8 bg-blue-50 rounded-lg p-6">
+                        <h3 class="text-xl font-semibold text-blue-900 mb-4">
+                            <i class="fas fa-lightbulb mr-2"></i>Study Tips
+                        </h3>
+                        <ul class="text-blue-800 space-y-2">
+                            <li><i class="fas fa-check mr-2"></i>Have your Bible ready for cross-references</li>
+                            <li><i class="fas fa-check mr-2"></i>Take notes as you read through the material</li>
+                            <li><i class="fas fa-check mr-2"></i>Discuss insights with fellow believers</li>
+                            <li><i class="fas fa-check mr-2"></i>Apply the teachings to your daily life</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="space-y-6">
+                    <!-- Teaching Info -->
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Teaching Details</h3>
+                        <div class="space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Teacher:</span>
+                                <span class="font-medium">{{ teaching.teacher }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Date:</span>
+                                <span class="font-medium">{{ teaching.date_created|date:"M d, Y" }}</span>
+                            </div>
+                            {% if teaching.category %}
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Category:</span>
+                                <span class="font-medium">{{ teaching.category }}</span>
+                            </div>
+                            {% endif %}
+                            {% if teaching.series %}
+                            <div class="flex justify-between">
+                                <span class="text-gray-600">Series:</span>
+                                <span class="font-medium">{{ teaching.series }}</span>
+                            </div>
+                            {% endif %}
+                            {% if teaching.scripture_reference %}
+                            <div class="pt-3 border-t border-gray-200">
+                                <span class="text-gray-600 text-xs uppercase tracking-wide">Scripture Reference</span>
+                                <p class="font-medium text-blue-600 mt-1">{{ teaching.scripture_reference }}</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Share -->
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Share This Teaching</h3>
+                        <div class="flex space-x-3">
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" 
+                               target="_blank" 
+                               class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white hover:bg-blue-700">
+                                <i class="fab fa-facebook"></i>
+                            </a>
+                            <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ teaching.title }}" 
+                               target="_blank"
+                               class="w-10 h-10 bg-blue-400 rounded-full flex items-center justify-center text-white hover:bg-blue-500">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="https://wa.me/?text={{ teaching.title }} - {{ request.build_absolute_uri }}" 
+                               target="_blank"
+                               class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center text-white hover:bg-green-600">
+                                <i class="fab fa-whatsapp"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Related Teachings -->
+                    {% if teaching.series %}
+                    <div class="bg-gray-50 rounded-lg p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">More from "{{ teaching.series }}"</h3>
+                        <p class="text-gray-600 text-sm">
+                            <a href="{% url 'teachings' %}" class="text-blue-600 hover:text-blue-800">
+                                View all teachings in this series <i class="fas fa-arrow-right ml-1"></i>
+                            </a>
+                        </p>
+                    </div>
+                    {% endif %}
+
+                    <!-- Contact -->
+                    <div class="bg-blue-600 text-white rounded-lg p-6">
+                        <h3 class="text-lg font-semibold mb-4">Questions?</h3>
+                        <p class="text-blue-100 text-sm mb-4">
+                            Have questions about this teaching? We'd love to help you grow in understanding.
+                        </p>
+                        <a href="{% url 'contact' %}" 
+                           class="bg-white text-blue-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition duration-300">
+                            Contact Us
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Other Teachings -->
+    <section class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">More Bible Teachings</h2>
+                <p class="text-lg text-gray-600">Continue your spiritual growth with more study materials</p>
+            </div>
+            
+            <div class="text-center">
+                <a href="{% url 'teachings' %}" 
+                   class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-300">
+                    <i class="fas fa-book-open mr-2"></i>Browse All Teachings
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function printPDF(url) {
+        // Open PDF in new window and trigger print
+        const printWindow = window.open(url, '_blank');
+        printWindow.onload = function() {
+            printWindow.print();
+        };
+    }
+
+    // Add copy link functionality
+    function copyLink() {
+        navigator.clipboard.writeText(window.location.href).then(function() {
+            alert('Link copied to clipboard!');
+        }, function(err) {
+            console.error('Could not copy text: ', err);
+        });
+    }
+
+    // Download tracking (optional)
+    document.querySelectorAll('a[download]').forEach(function(link) {
+        link.addEventListener('click', function() {
+            console.log('PDF downloaded: {{ teaching.title }}');
+            // You can add analytics tracking here if needed
+        });
+    });
+</script>
+{% endblock %}
